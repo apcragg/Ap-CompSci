@@ -1,4 +1,4 @@
-package homework;
+package StudentLab;
 
 import java.io.File;
 import java.util.*;
