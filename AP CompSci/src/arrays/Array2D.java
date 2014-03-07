@@ -1,6 +1,9 @@
 package arrays;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 /*
  * Author:       Andrew Cragg
@@ -76,34 +79,104 @@ public class Array2D
 		return close;
 	}
 	
+	public int sumRow(int r)
+	{
+		int sum = 0;
+		
+		for(int i = 0; i < array[r].length; i++)
+			sum += array[r][i];
+			
+		return sum;
+	}
+	
+	public int sumCol(int c)
+	{
+		int sum = 0;
+		
+		for(int i = 0; i < array.length; i++)
+			sum += array[i][c];
+			
+		return sum;
+	}
+	
+	public int sumMain()
+	{
+		int sum = 0;
+		
+		for(int i = 0; i < Math.min(array[0].length, array.length); i++)
+			sum += array[i][i];
+			
+		return sum;
+	}
+	
+	public int sumMinor()
+	{
+		int sum = 0;
+		int min = Math.min(array[0].length, array.length);
+		
+		for(int i = 0; i < min; i++)
+			sum += array[min - 1 - i][i];
+		
+		return sum;
+	}
+	
+	public int median()
+	{
+		ArrayList<Integer> sortedArrayList = new ArrayList<Integer>();
+		
+		for(int i = 0; i < x; i++)
+			for(int j = 0; j < y; j++)
+				sortedArrayList.add(array[i][j]);
+		
+		Collections.sort(sortedArrayList, new Comparator<Integer>()
+				{
+					public int compare(Integer o1, Integer o2)
+					{
+						return o1 - o2;
+					}	
+				});
+
+		return sortedArrayList.get((sortedArrayList.size() / 2));
+	}
+	
+	public int mode()
+	{
+		HashMap<Integer, Integer> modes = new HashMap<Integer, Integer>();
+		
+		for(int i = 0; i < x; i++)
+			for(int j = 0; j < y; j++)
+			{
+				int num = array[i][j];
+				
+				if(modes.containsKey(num)) modes.put(num, modes.get(num) + 1);
+				else modes.put(num, 1);
+			}
+		
+		int mode = array[0][0];
+
+		for(Integer m : modes.keySet())
+		{	
+			int count = modes.get(m);
+			int modeCount = modes.get(mode);
+			
+			if(count > modeCount || (modeCount == count && mode > m)) mode = m;
+		}
+		
+		return mode;
+	}
+	
 	public void print()
 	{
+		System.out.println("=======Array========");
+		
 		for(int i = 0; i < x; i++)
 		{
 			System.out.print("[");
 			
 			for(int j = 0; j < y; j++)
-				System.out.print(array[i][j] + (j + 1 == y ? "" : ", "));
+				System.out.print((array[i][j] >= 0 ? " " : "") + array[i][j] + (j + 1 == y ? "" : ", "));
 			
 			System.out.println("]");
 		}
-	}
-	
-	public static void main(String[] args)
-	{
-		int[][] temp = new int[5][5];
-		
-		for(int i = 0; i < 5; i++)
-			for(int j = 0; j < 5; j++)
-				temp[i][j] = (int) ((((Math.random()) * 9f) - 4.5f) * 2);
-				
-		Array2D array2d = new Array2D(temp);
-		
-		array2d.print();
-		System.out.println("Max: " + array2d.max());
-		System.out.println("Min: " + array2d.min());
-		System.out.println("Average: " + array2d.average());
-		array2d.biggerThanAverage();
-		System.out.println("Closest to zero: " + array2d.closestToZero());
 	}
 }
